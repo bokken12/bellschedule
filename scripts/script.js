@@ -57,8 +57,8 @@ var START_DATE = new Date('September 24, 2018'); //The start day of the school y
 var START_SCHEDULE = 1; //The schedule on the first day
 
 var LINKS = {
-    "Lunch 1 (7/8th)": "https://docs.google.com/viewerng/viewer?url=http://resources.harker.org/download/middle-school-lunch-menu/?wpdmdl%3D130%26ind%3D7FN43heTFNNm5UNM7qADuQz5D0QuhjXm1H8FwXLQ2TuwJnn8vcHrRX5BEI05CYdm%26open%3D1",
-    "Lunch 2 (6th)": "https://docs.google.com/viewerng/viewer?url=http://resources.harker.org/download/middle-school-lunch-menu/?wpdmdl%3D130%26ind%3D7FN43heTFNNm5UNM7qADuQz5D0QuhjXm1H8FwXLQ2TuwJnn8vcHrRX5BEI05CYdm%26open%3D1"
+    "Lunch 1 (7/8th)": "https://bokken12.github.io/harker-lunch/#$DAYNAMELOWER$",
+    "Lunch 2 (6th)": "https://bokken12.github.io/harker-lunch/#$DAYNAMELOWER$"
 }
 
 // //On a given day, independent of rotation, after school has a fixed function. This array maps the day (0 for Monday, etc.)
