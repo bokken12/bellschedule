@@ -6,13 +6,13 @@
 				{
 					"name": "color",
 					"type": "checkbox",
-					"default": false,
+					"default": true,
 					"description": "Show color"
 				},
 				{
 					"name": "showPassingPeriods",
 					"type": "checkbox",
-					"default": true,
+					"default": false,
 					"description": "Show passing periods"
 				},
 				{

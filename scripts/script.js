@@ -52,28 +52,28 @@ var KEY_B = 66;
 var KONAMI = "" + KEY_UP + KEY_UP + KEY_DOWN + KEY_DOWN + KEY_LEFT + KEY_RIGHT + KEY_LEFT + KEY_RIGHT + KEY_B + KEY_A;
 var isDoge;
 
-var START_DATE = new Date('August 27, 2018'); //The start day of the school year. This should be a weekday.
+var START_DATE = new Date('September 24, 2018'); //The start day of the school year. This should be a weekday.
 
 var START_SCHEDULE = 1; //The schedule on the first day
 
 var LINKS = {
-    "Lunch": "https://harkerdev.github.io/harker-lunch/#$DAYNAMELOWER$",
-    "School Meeting": "https://docs.google.com/forms/d/e/1FAIpQLSeZoCFQhzPqiX-Tbcc0qRUuw7_rjMgUxkiR97GN6aNB8Ulfsg/viewform?entry.1033439092=$MONTH$%2F$DATE$"
+    "Lunch 1 (7/8th)": "https://docs.google.com/viewerng/viewer?url=http://resources.harker.org/download/middle-school-lunch-menu/?wpdmdl%3D130%26ind%3D7FN43heTFNNm5UNM7qADuQz5D0QuhjXm1H8FwXLQ2TuwJnn8vcHrRX5BEI05CYdm%26open%3D1",
+    "Lunch 2 (6th)": "https://docs.google.com/viewerng/viewer?url=http://resources.harker.org/download/middle-school-lunch-menu/?wpdmdl%3D130%26ind%3D7FN43heTFNNm5UNM7qADuQz5D0QuhjXm1H8FwXLQ2TuwJnn8vcHrRX5BEI05CYdm%26open%3D1"
 }
 
-//On a given day, independent of rotation, after school has a fixed function. This array maps the day (0 for Monday, etc.)
-//to the particular function (e.g. Extra Help). This ultimately piggybacks on the replacement system.
-var COLLABORATION_REPLACEMENTS = [
-    "Collaboration -> Office Hours",
-    "Collaboration -> Office Hours",
-    "Collaboration -> Faculty Meeting",
-    "Collaboration -> Office Hours",
-    "Collaboration -> After School"
-];
+// //On a given day, independent of rotation, after school has a fixed function. This array maps the day (0 for Monday, etc.)
+// //to the particular function (e.g. Extra Help). This ultimately piggybacks on the replacement system.
+// var COLLABORATION_REPLACEMENTS = [
+//     "Collaboration -> Office Hours",
+//     "Collaboration -> Office Hours",
+//     "Collaboration -> Faculty Meeting",
+//     "Collaboration -> Office Hours",
+//     "Collaboration -> After School"
+// ];
 
-var TOTAL_SCHEDULES = 8; //The number of schedules to be cycled
+var TOTAL_SCHEDULES = 5; //The number of schedules to be cycled
 
-var SCHEDULES = ["A", "B", "C", "D", "A", "B", "C", "D"];
+var SCHEDULES = ["Meeting", "Regular/Advisory", "Faculty", "Regular/Advisory", "Advisory/Assembly"];
 
 var MILLIS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -407,12 +407,15 @@ function createDay(week, date) {
                     );
                 } else {
                     //parent, name, start, end, date
+                    console.log(period1Name)
                     createPeriod(
                         period1,
                         period1Name,
                         start,
                         end,
-                        date
+                        date,
+                        true,
+                        true
                     );
 
                     show1Time = daySchedule.id == 4 || daySchedule.id == "ReCreate";
@@ -561,7 +564,7 @@ function getDayInfo(day) {
         name = SCHEDULES[id - 1];
     }
 
-    replacements.push(COLLABORATION_REPLACEMENTS[day.getDay() - 1]);
+    // replacements.push(COLLABORATION_REPLACEMENTS[day.getDay() - 1]);
 
     return {
         "index": index,
@@ -628,14 +631,14 @@ function calculateScheduleRotationID(date) {
         id = START_SCHEDULE + Math.floor(daysDifference % TOTAL_SCHEDULES);
     }
 
-    if (id > 8) {
-        id -= 8;
+    if (id > 5) {
+        id -= 5;
     }
 
     //Even schedules repeat (2 and 6 are the same and 4 and 8 are the same)
-    if (id > 4 && id % 2 === 0) {
-        id = id - 4;
-    }
+    // if (id > 4 && id % 2 === 0) {
+    //     id = id - 4;
+    // }
 
     return id;
 }
@@ -644,10 +647,13 @@ function calculateScheduleRotationID(date) {
  * Creates and returns a new period wrapper with the given content and start/end times.
  * Also applies any special properties based on period length (text on single line if too short, block period if longer than regular).
  */
-function createPeriod(parent, name, start, end, date, showTime) {
+function createPeriod(parent, name, start, end, date, showTime, isDouble) {
     //Do not show time for very small periods (e.g. class meetings)
     if (typeof (showTime) === "undefined") {
         showTime = true;
+    }
+    if (typeof (isDouble) == "undefined") {
+        isDouble = false;
     }
     startDate = getDateFromString(start, date);
     endDate = getDateFromString(end, date);
@@ -658,6 +664,9 @@ function createPeriod(parent, name, start, end, date, showTime) {
     periodWrapper.start = startDate;
     periodWrapper.end = endDate;
     var length = (endDate - startDate) / 60000;
+    if(isDouble && length < 34){
+        length = 34;
+    }
     if (options.color === true) {
 
 
@@ -688,17 +697,17 @@ function createPeriod(parent, name, start, end, date, showTime) {
     if (length > 0) {
         periodWrapper.style.height = (length - 1) + "px"; //minus 1 to account for 1px border
 
-        if (length >= 15) {
+        // if (length >= 15) {
             if (name) {
                 periodWrapper.innerHTML = name;
             }
             //Force long periods (30 minutes and up) to have a time
-            if (showTime) {
+            if (showTime && length > 20) {
                 periodWrapper.innerHTML += (length < 30 ? " " : "<br />") + start + " – " + end;
             }
             //if(length>50 && !name.indexOf("P")) //handle block periods (class=long, i.e. bold text)
             //periodWrapper.classList.add("long");
-        }
+        // }
 
         if(LINKS[name]) {
             var linkWrapper = document.createElement("a");
